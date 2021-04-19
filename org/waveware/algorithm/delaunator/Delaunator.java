@@ -39,22 +39,25 @@ public class Delaunator
             list.add(p);
         }
 
-        Delaunator     del = new Delaunator(list.toArray(new DPoint[]{}));
+        Delaunator     del = new Delaunator(list);
         List<DTriangle>tri = del.getTriangles();
         BufferedImage  img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
         Graphics2D     g2d = img.createGraphics();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         {
             g2d.setColor(Color.DARK_GRAY);
-            for (int j = 0; j < tri.size(); j++)
+            for (DTriangle t : tri)
             {
-                DTriangle t = tri.get(j);
                 DEdge     a = t.ab;
                 DEdge     b = t.bc;
                 DEdge     c = t.ca;
                 g2d.drawLine((int)a.a.x, (int)a.a.y, (int)b.b.x, (int)b.b.y); 
                 g2d.drawLine((int)b.a.x, (int)b.a.y, (int)b.b.x, (int)b.b.y); 
                 g2d.drawLine((int)c.a.x, (int)c.a.y, (int)c.b.x, (int)c.b.y); 
+                
+                DTriangle[]wingA = a.getWing();
+                DTriangle[]wingB = b.getWing();
+                DTriangle[]wingC = c.getWing();
             }
         }
         g2d.dispose();
@@ -131,6 +134,16 @@ public class Delaunator
         public DTriangle A;
         public DTriangle B;
 
+        public DTriangle[]getWing()
+        {
+            if (A != null && B != null)
+            {
+                return new DTriangle[] {A, B};
+            }
+            
+            return new DTriangle[] { A };
+        }
+        
         public void wing(DTriangle t)
         {
             if (false) {}
