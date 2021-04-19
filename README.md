@@ -1,4 +1,7 @@
 # delaunator-java
+
+<img src="delaunator.png" alt="Delaunay triangulation example" width="600" />
+
 This code is java port of delaunator.
 
 Delaunator triangulation algorithm is incredibly fast and robust library for point of 2D clouds.
