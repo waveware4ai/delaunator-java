@@ -18,6 +18,8 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
+// 20210414 14mhz@hanmail.net, zookime@waveware.co.kr
+
 public class Delaunator
 {
     public static void main(String[] args) throws IOException
