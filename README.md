@@ -1,6 +1,7 @@
 # delaunator-java
 
 <img src="delaunator.example.png" alt="delaunay example" width="600" />
+<img src="delaunator.voronoi.example.png" alt="delaunay example" width="600" />
 
 This code is java port of delaunator.
 
