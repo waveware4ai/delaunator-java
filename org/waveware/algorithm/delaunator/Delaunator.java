@@ -18,7 +18,7 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
-//20210414 14mhz@hanmail.net, zookime@waveware.co.kr
+//20210414 14mhz@hanmail.net, zookim@waveware.co.kr
 /*
 This code is java port of delaunator.
 Delaunator triangulation algorithm is incredibly fast and robust library for point of 2D clouds.
