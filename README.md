@@ -23,17 +23,15 @@ public static void main(String[] args) throws IOException
     
     Delaunator     del = new Delaunator(list);
     List<DTriangle>tri = del.getTriangles();
+    for (DTriangle t : tri)
     {
-        for (int j = 0; j < tri.size(); j++)
-        {
-            DTriangle t = tri.get(j);
-            DEdge      edgeA = t.ab;        // edge A of Tri
-            DEdge      edgeB = t.bc;        // edge B of Tri
-            DEdge      edgeC = t.ca;        // edge C of Tri
-            DTriangle[]wingA = a.getWing(); // wing A0, A1 of edge A
-            DTriangle[]wingB = b.getWing(); // wing B0, B1 of edge B
-            DTriangle[]wingC = c.getWing(); // wing C0, C1 of edge C
-        }
+        DTriangle t = tri.get(j);
+        DEdge      edgeA = t.ab;        // edge A of Tri
+        DEdge      edgeB = t.bc;        // edge B of Tri
+        DEdge      edgeC = t.ca;        // edge C of Tri
+        DTriangle[]wingA = a.getWing(); // wing A0, A1 of edge A
+        DTriangle[]wingB = b.getWing(); // wing B0, B1 of edge B
+        DTriangle[]wingC = c.getWing(); // wing C0, C1 of edge C
     }
 }
 ```
