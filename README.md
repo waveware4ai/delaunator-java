@@ -21,7 +21,7 @@ public static void main(String[] args) throws IOException
         list.add(p);
     }
     
-    Delaunator     del = new Delaunator(list.toArray(new DPoint[]{}));
+    Delaunator     del = new Delaunator(list);
     List<DTriangle>tri = del.getTriangles();
     {
         for (int j = 0; j < tri.size(); j++)
