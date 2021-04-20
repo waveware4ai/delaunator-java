@@ -18,6 +18,9 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
+import org.waveware.algorithm.delaunator.Delaunator.DEdge;
+import org.waveware.algorithm.delaunator.Delaunator.DPoint;
+
 //20210414 14mhz@hanmail.net, zookim@waveware.co.kr
 /*
 This code is java port of delaunator.
@@ -702,65 +705,42 @@ public class Delaunator
         ////
         
         List<DEdge>voronoiedges = new ArrayList();
-        for (int i = 0; i < triangles.length; i++)
-        {
-            if (i < halfedges[i])
-            {
-                DPoint a = getCentroid(triangleOfEdge(i));
-                DPoint b = getCentroid(triangleOfEdge(halfedges[i]));
-                if (a == null || b == null) continue;
-                DEdge  e = new DEdge(a, b);
-
-                if (unq_edges.containsKey(e)) 
-                    e = unq_edges.get(e);
-                else e = e; // centroid new edge
-                if (false) voronoiedges.add(e);
-            }
-        }
-
-        Map<DEdge, Integer>voronmap = new HashMap();
-        Set<Integer> seen = new LinkedHashSet();
+        List<DEdge>voronoihulledges = new ArrayList();
+        Set<Integer>tmp = new LinkedHashSet();
         for (int i = 0; i < triangles.length; i++)
         {
             int id = triangles[nextHalfEdge(i)];
-            if (!seen.contains(id))
+            if (!tmp.contains(id))
             {
-                seen.add(id);
-                List<Integer> edges = edgesAroundPoint(i);
-                List<DPoint>points = new ArrayList();
+                tmp.add(id);
+                List<Integer>edges = edgesAroundPoint(i);
+                List<DPoint> point = new ArrayList();
+                
                 for (int j = 0; j < edges.size(); j++)
                 {
-                    int tri = triangleOfEdge(edges.get(j));
-                    DPoint p = getCentroid(tri); // !!!
-                    if (p != null) points.add(p);
+                    DPoint[]pnt = getTrianglePoints(triangleOfEdge(edges.get(j)));
+                    DPoint  cen = getCentroid(pnt);
+                    if (cen == null) continue;
+                    point.add(cen);
                 }
-                
-                for (int j = 0; j < points.size(); j++)
+       
+                for (int j = 0; j < point.size(); j++)
                 {
-                    DPoint cur = points.get(j);
-                    DPoint nxt = points.get((j + 1)%points.size());
-                    DEdge  e = new DEdge(cur, nxt);
-                    if (unq_edges.containsKey(e)) 
-                        e = unq_edges.get(e);
-                    else e = e; // centroid new edge
-                    voronoiedges.add(e);
+                    DPoint a = point.get(j);
+                    DPoint b = point.get((j+1)%point.size());
+                    DEdge  e = new DEdge(a, b);
                     
-                    Integer cnt = null;
-                    if ((cnt = voronmap.get(e)) == null) voronmap.put(e, cnt = 0);
-                    voronmap.put(e, cnt+1);
+                    voronoiedges.add(e);
                 }
             }
         }
-        
-        List<DEdge>voronoihulledges = new ArrayList();
-        voronmap.forEach((k, v) -> { if (v != 2) voronoihulledges.add(k); });
         
         this.trias = new ArrayList(unq_trias.values());
         this.edges = new ArrayList(unq_edges.values());
         this.poinz = Arrays.asList(points);
         this.hulls = hulledges;
         this.voron = voronoiedges;
-        this.vhull = voronoihulledges;
+        this.vhull = hulledges; //voronoihulledges; //it must be implement !!!
     }
     
     ///////////////////////////////////////////////////////////////////////////
