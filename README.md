@@ -33,9 +33,9 @@ public static void main(String[] args) throws IOException
         DEdge      edgeA = t.ab;        // edge A of Tri
         DEdge      edgeB = t.bc;        // edge B of Tri
         DEdge      edgeC = t.ca;        // edge C of Tri
-        DTriangle[]wingA = a.getWing(); // wing A0, A1 of edge A
-        DTriangle[]wingB = b.getWing(); // wing B0, B1 of edge B
-        DTriangle[]wingC = c.getWing(); // wing C0, C1 of edge C
+        DTriangle[]wingA = edgeA.getWing(); // wing A0, A1 of edge A
+        DTriangle[]wingB = edgeB.getWing(); // wing B0, B1 of edge B
+        DTriangle[]wingC = edgeC.getWing(); // wing C0, C1 of edge C
     }
 }
 ```
