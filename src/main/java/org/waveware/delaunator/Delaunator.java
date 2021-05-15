@@ -1,281 +1,26 @@
 package org.waveware.delaunator;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.imageio.ImageIO;
-
-import org.waveware.delaunator.Delaunator.DEdge;
-import org.waveware.delaunator.Delaunator.DPoint;
-
-//20210414 14mhz@hanmail.net, zookim@waveware.co.kr
-/*
-This code is java port of delaunator.
-Delaunator triangulation algorithm is incredibly fast and robust library for point of 2D clouds.
-I modified it by referring to the code c++, c# version.
-For more information, go to original site https://github.com/mapbox/delaunator
-*/
-
+/**
+ * This code is java port of delaunator. Delaunator triangulation algorithm is
+ * incredibly fast and robust library for point of 2D clouds. For more
+ * information, go to original site https://github.com/mapbox/delaunator
+ * 
+ * @author 14mhz@hanmail.net
+ * @author zookim@waveware.co.kr
+ *
+ */
 public class Delaunator
 {
-    public static void main(String[] args) throws IOException
-    {
-        List<DPoint>list = new ArrayList();
-        for (int i = 0; i < 10000; i++)
-        {
-            double x = Math.random() * 1000;
-            double y = Math.random() * 1000;
-            DPoint p = new DPoint((int)x, (int)y);
-            list.add(p);
-        }
-
-        Delaunator     del = new Delaunator(list);
-        List<DTriangle>tri = del.getTriangles();
-        BufferedImage  img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D     g2d = img.createGraphics();
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        {
-            g2d.setColor(Color.DARK_GRAY);
-            for (DTriangle t : tri)
-            {
-                DEdge     a = t.ab;
-                DEdge     b = t.bc;
-                DEdge     c = t.ca;
-                g2d.drawLine((int)a.a.x, (int)a.a.y, (int)b.b.x, (int)b.b.y); 
-                g2d.drawLine((int)b.a.x, (int)b.a.y, (int)b.b.x, (int)b.b.y); 
-                g2d.drawLine((int)c.a.x, (int)c.a.y, (int)c.b.x, (int)c.b.y); 
-                
-                DTriangle[]wingA = a.getWing();
-                DTriangle[]wingB = b.getWing();
-                DTriangle[]wingC = c.getWing();
-            }
-        }
-        g2d.dispose();
-        
-        ImageIO.write(img, "png", new File("w:/123.png"));
-    }
-    
-    public static class DPoint implements Comparable<DPoint> 
-    {
-        public double x;
-        public double y;
-        public DPoint(double x, double y)
-        {
-            this.x = x;
-            this.y = y;
-        }
-
-        public double x() { return x; }
-        public double y() { return y; }
-        
-        public int compareTo(DPoint p) 
-        {
-            return this.x != p.x ? Double.compare(this.x, p.x) : Double.compare(this.y, p.y);
-        }
-
-        public String toString() 
-        {
-            return "p["+ x + ", " + y + "]";
-        }
-        
-        Integer hash = null;
-        public int hashCode()
-        {
-            if (hash != null) return hash;
-            return hash = hash(x, y);
-        }
-
-        public static int hash(double x, double y)
-        {
-            final int prime = 31;
-            int result = 1;
-            long temp;
-            temp = Double.doubleToLongBits(x);
-            result = prime * result + (int) (temp ^ (temp >>> 32));
-            temp = Double.doubleToLongBits(y);
-            return prime * result + (int) (temp ^ (temp >>> 32));
-        }
-        
-        public boolean equals(Object obj)
-        {
-            if (this == obj) return true;
-            if (obj == null) return false;
-            if (getClass() != obj.getClass()) return false;
-            
-            DPoint a = this;
-            DPoint b = (DPoint) obj;
-            if (a.x != b.x || a.y != b.y) return false;
-            return true;
-        }
-    }
-    
-    public static class DEdge
-    {
-        public DPoint a;
-        public DPoint b;
-        
-        public DEdge(DPoint a, DPoint b)
-        {
-            boolean swap = 0 < a.compareTo(b);
-            this.a = swap ? b : a;
-            this.b = swap ? a : b;
-        }
-        
-        public DTriangle A;
-        public DTriangle B;
-
-        public DTriangle[]getWing()
-        {
-            if (A != null && B != null)
-            {
-                return new DTriangle[] {A, B};
-            }
-            
-            return new DTriangle[] { A };
-        }
-        
-        public void wing(DTriangle t)
-        {
-            if (false) {}
-            else if (this.A == null) this.A = t;
-            else if (this.B == null) this.B = t;
-            else
-            {
-                System.err.println("[ERR] error state in edge's wing triangle ...");
-            }
-        }
-        
-        public String toString()
-        {
-            return "e[" + a + " - " + b + "]";
-        }
-        
-        Integer hash = null;
-        public int hashCode()
-        {
-            if (hash != null) return hash;
-            return hash = hash(a, b); 
-        }
-        
-        public static int hash(DPoint a, DPoint b)
-        {
-            int ahash = a.hashCode();
-            int bhash = b.hashCode();
-            return ahash * 31 + bhash;
-        }
-        
-        public boolean equals(DPoint a, DPoint b)
-        {
-            if (this.a.equals(a) && this.b.equals(b)) return true;
-            if (this.a.equals(b) && this.b.equals(a)) return true;
-            return false;
-        }
-        
-        public boolean equals(Object obj)
-        {
-            if (this == obj) return true;
-            if (obj == null) return false;
-            if (getClass() != obj.getClass()) return false;
-            DEdge A = this;
-            DEdge B = (DEdge) obj;
-            
-            return (A.a.equals(B.a) && A.b.equals(B.b)) || (A.a.equals(B.b) && A.b.equals(B.a));
-        }
-    }
-    
-    public static class DTriangle
-    {
-        public DPoint a;
-        public DPoint b;
-        public DPoint c;
-
-        public DTriangle(DPoint a, DPoint b, DPoint c)
-        {
-            DPoint[]tmp = { a, b, c};
-            Arrays.sort(tmp);
-            a = tmp[0];
-            b = tmp[1];
-            c = tmp[2];
-            
-            this.a = a;
-            this.b = b;
-            this.c = c;
-        }
-        
-        public DEdge ab;
-        public DEdge bc;
-        public DEdge ca;
-
-        public void edges(DEdge ab, DEdge bc, DEdge ca)
-        {
-            this.ab = ab.equals(a, b) ? ab : bc.equals(a, b) ? bc : ca;
-            this.bc = ab.equals(b, c) ? ab : bc.equals(b, c) ? bc : ca;
-            this.ca = ab.equals(c, a) ? ab : bc.equals(c, a) ? bc : ca;
-        }
-        
-        public String toString()
-        {
-            return "t[" + a + " - " + b +  " - " + c + "]";
-        }
-        
-        Integer hash = null;
-        public int hashCode()
-        {
-            if (hash != null) return hash;
-            return hash = hash(a, b, c);
-        }
-        
-        public static int hash(DPoint a, DPoint b, DPoint c)
-        {
-            final int prime = 31;
-            int hash = 1;
-            hash = prime * hash + a.hashCode();
-            hash = prime * hash + b.hashCode();
-            hash = prime * hash + c.hashCode();
-            return hash;
-        }
-        
-        public boolean equals(Object obj)
-        {
-            if (this == obj) return true;
-            if (obj == null) return false;
-            if (getClass() != obj.getClass()) return false;
-            DTriangle A = this;
-            DTriangle B = (DTriangle) obj;
-            
-            if (false) {}
-            else if (A.a.equals(B.a))
-            {
-                return (A.b.equals(B.b) && A.c.equals(B.c)) || (A.b.equals(B.c) && A.c.equals(B.b));
-            }
-            else if (A.a.equals(B.b))
-            {
-                return (A.b.equals(B.a) && A.c.equals(B.c)) || (A.b.equals(B.c) && A.c.equals(B.a));
-            }
-            else if (A.a.equals(B.c))
-            {
-                return (A.b.equals(B.a) && A.c.equals(B.b)) || (A.b.equals(B.b) && A.c.equals(B.a));
-            }
-            
-            return false;
-        }
-    }
-    
-    ///////////////////////////////////////////////////////////////////////////
-    
+	
     private double EPSILON = Math.pow(2, -52);
     private int[] EDGE_STACK = new int[512];
 
@@ -300,14 +45,14 @@ public class Delaunator
 
     public static List<DPoint>convert(List<Point2D>points)
     {
-        List<DPoint>lst = new ArrayList();
+        List<DPoint>lst = new ArrayList<>();
         points.forEach(p -> lst.add(new DPoint(p.getX(), p.getY())));
         return lst;
     }
     
     public static DPoint[]unique(List<DPoint>points)
     {
-        Set<DPoint>unq = new LinkedHashSet();
+        Set<DPoint> unq = new LinkedHashSet<>();
         for (int i = 0; i < points.size(); i++)
         {
             DPoint v = points.get(i);
@@ -637,8 +382,8 @@ public class Delaunator
     
     private void generate()
     {
-        Map<DEdge, DEdge>        unq_edges = new HashMap();
-        Map<DTriangle, DTriangle>unq_trias = new HashMap();
+        Map<DEdge, DEdge>        unq_edges = new HashMap<>();
+        Map<DTriangle, DTriangle>unq_trias = new HashMap<>();
         
         for (int n = 0; triangles != null && n < triangles.length / 3; n++)
         {
@@ -684,7 +429,7 @@ public class Delaunator
         
         ////
         
-        List<DEdge>hulledges = new ArrayList();
+        List<DEdge>hulledges = new ArrayList<>();
         for (int i = 0; i < hull.length; i++)
         {
             DPoint a = points[hull[i]];
@@ -704,9 +449,9 @@ public class Delaunator
 
         ////
         
-        List<DEdge>voronoiedges = new ArrayList();
-        List<DEdge>voronoihulledges = new ArrayList();
-        Set<Integer>tmp = new LinkedHashSet();
+        List<DEdge>voronoiedges = new ArrayList<>();
+        List<DEdge>voronoihulledges = new ArrayList<>();
+        Set<Integer>tmp = new LinkedHashSet<Integer>();
         for (int i = 0; i < triangles.length; i++)
         {
             int id = triangles[nextHalfEdge(i)];
@@ -714,7 +459,7 @@ public class Delaunator
             {
                 tmp.add(id);
                 List<Integer>edges = edgesAroundPoint(i);
-                List<DPoint> point = new ArrayList();
+                List<DPoint> point = new ArrayList<>();
                 
                 for (int j = 0; j < edges.size(); j++)
                 {
@@ -735,8 +480,8 @@ public class Delaunator
             }
         }
         
-        this.trias = new ArrayList(unq_trias.values());
-        this.edges = new ArrayList(unq_edges.values());
+        this.trias = new ArrayList<DTriangle>(unq_trias.values());
+        this.edges = new ArrayList<DEdge>(unq_edges.values());
         this.poinz = Arrays.asList(points);
         this.hulls = hulledges;
         this.voron = voronoiedges;
@@ -1063,7 +808,7 @@ public class Delaunator
     
     public List<Integer>edgesAroundPoint(int start)
     {
-        List lst = new ArrayList();
+        List<Integer> lst = new ArrayList<>();
         int incoming = start;
         do
         {
@@ -1077,7 +822,7 @@ public class Delaunator
     
     public List<Integer>trianglesAdjacentToTriangle(int t)
     {
-        List adjacentTriangles = new ArrayList();
+        List<Integer> adjacentTriangles = new ArrayList<>();
         int[]triangleEdges = edgesOfTriangle(t);
         
         for (int i = 0; i < triangleEdges.length; i++)
