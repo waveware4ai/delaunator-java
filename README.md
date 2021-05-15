@@ -13,30 +13,23 @@ The port was produced by referring to the c++ and c# versions of *Delaunator*.
 
 ## Example
 
-```js
-public static void main(String[] args) throws IOException
-{
-    List<DPoint>list = new ArrayList();
-    for (int i = 0; i < 10000; i++)
-    {
-        double x = Math.random() * 1000;
-        double y = Math.random() * 1000;
-        DPoint p = new DPoint((int)x, (int)y);
-        list.add(p);
-    }
-    
-    Delaunator     del = new Delaunator(list);
-    List<DTriangle>tri = del.getTriangles();
-    for (DTriangle t : tri)
-    {
-        DTriangle t = tri.get(j);
-        DEdge      edgeA = t.ab;        // edge A of Tri
-        DEdge      edgeB = t.bc;        // edge B of Tri
-        DEdge      edgeC = t.ca;        // edge C of Tri
-        DTriangle[]wingA = edgeA.getWing(); // wing A0, A1 of edge A
-        DTriangle[]wingB = edgeB.getWing(); // wing B0, B1 of edge B
-        DTriangle[]wingC = edgeC.getWing(); // wing C0, C1 of edge C
-    }
+```
+List<DPoint> list = new ArrayList<>();
+for (int i = 0; i < 10000; i++) {
+	double x = Math.random() * 1000;
+	double y = Math.random() * 1000;
+	DPoint p = new DPoint((int) x, (int) y);
+	list.add(p);
+}
+
+Delaunator del = new Delaunator(list);
+for (DTriangle t : del.getTriangles()) {
+	DEdge edgeA = t.ab; // edge A of Tri
+	DEdge edgeB = t.bc; // edge B of Tri
+	DEdge edgeC = t.ca; // edge C of Tri
+	DTriangle[] wingA = edgeA.getWing(); // wing A0, A1 of edge A
+	DTriangle[] wingB = edgeB.getWing(); // wing B0, B1 of edge B
+	DTriangle[] wingC = edgeC.getWing(); // wing C0, C1 of edge C
 }
 ```
 ## Ports to other languages
