@@ -1,15 +1,10 @@
 # delaunator-java
 
-<img src="delaunator.example.png" alt="delaunay example" width="600" />
-<img src="delaunator.voronoi.example.png" alt="delaunay example" width="600" />
+This library is Java port of [*Delaunator*](https://github.com/mapbox/delaunator), an incredibly fast and robust JavaScript library for Delaunay triangulation of 2D points.
 
-This code is java port of delaunator.
+The port was produced by referring to the c++ and c# versions of *Delaunator*.
 
-Delaunator triangulation algorithm is incredibly fast and robust library for point of 2D clouds.
-
-I modified it by referring to the code c++, c# version.
-
-For more information, go to original site https://github.com/mapbox/delaunator
+<img src="delaunator.example.png" alt="delaunay example" width="500" /> <img src="delaunator.voronoi.example.png" alt="delaunay example" width="500" />
 
 ## Example
 
@@ -49,4 +44,3 @@ public static void main(String[] args) throws IOException
 - [Delaunator-Python](https://github.com/HakanSeven12/Delaunator-Python) (Python)
 - [hx-delaunator](https://github.com/dmitryhryppa/hx-delaunator) (Haxe)
 - [ricardomatias/delaunator](https://github.com/ricardomatias/delaunator) (Kotlin)
-- [delaunator-java](https://github.com/waveware4ai/delaunator-java) (Java)
