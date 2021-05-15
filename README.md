@@ -1,10 +1,13 @@
+[![](https://jitpack.io/v/waveware4ai/delaunator-java.svg)](https://jitpack.io/#waveware4ai/delaunator-java)
+
+
 # delaunator-java
 
 This library is Java port of [*Delaunator*](https://github.com/mapbox/delaunator), an incredibly fast and robust JavaScript library for Delaunay triangulation of 2D points.
 
 The port was produced by referring to the c++ and c# versions of *Delaunator*.
 
-<img src="delaunator.example.png" alt="delaunay example" width="500" /> <img src="delaunator.voronoi.example.png" alt="delaunay example" width="500" />
+<img src="resources\delaunator.example.png" alt="delaunay example" width="500" /> <img src="resources\delaunator.voronoi.example.png" alt="delaunay example" width="500" />
 
 ## Example
 
