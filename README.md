@@ -1,42 +1,35 @@
+[![](https://jitpack.io/v/waveware4ai/delaunator-java.svg)](https://jitpack.io/#waveware4ai/delaunator-java)
+
+
 # delaunator-java
 
-<img src="delaunator.example.png" alt="delaunay example" width="600" />
-<img src="delaunator.voronoi.example.png" alt="delaunay example" width="600" />
+This library is Java port of [*Delaunator*](https://github.com/mapbox/delaunator), an incredibly fast and robust JavaScript library for Delaunay triangulation of 2D points.
 
-This code is java port of delaunator.
-
-Delaunator triangulation algorithm is incredibly fast and robust library for point of 2D clouds.
-
-I modified it by referring to the code c++, c# version.
-
-For more information, go to original site https://github.com/mapbox/delaunator
+The port was produced by referring to the c++ and c# versions of *Delaunator*.
+<p float="middle">
+    <img src="resources\delaunator.example.png" alt="delaunay example" width="49.5%"/>
+    <img src="resources\delaunator.voronoi.example.png" alt="delaunay example" width="49.5%"/></p>
+</p>
 
 ## Example
 
-```js
-public static void main(String[] args) throws IOException
-{
-    List<DPoint>list = new ArrayList();
-    for (int i = 0; i < 10000; i++)
-    {
-        double x = Math.random() * 1000;
-        double y = Math.random() * 1000;
-        DPoint p = new DPoint((int)x, (int)y);
-        list.add(p);
-    }
-    
-    Delaunator     del = new Delaunator(list);
-    List<DTriangle>tri = del.getTriangles();
-    for (DTriangle t : tri)
-    {
-        DTriangle t = tri.get(j);
-        DEdge      edgeA = t.ab;        // edge A of Tri
-        DEdge      edgeB = t.bc;        // edge B of Tri
-        DEdge      edgeC = t.ca;        // edge C of Tri
-        DTriangle[]wingA = edgeA.getWing(); // wing A0, A1 of edge A
-        DTriangle[]wingB = edgeB.getWing(); // wing B0, B1 of edge B
-        DTriangle[]wingC = edgeC.getWing(); // wing C0, C1 of edge C
-    }
+```
+List<DPoint> list = new ArrayList<>();
+for (int i = 0; i < 10000; i++) {
+	double x = Math.random() * 1000;
+	double y = Math.random() * 1000;
+	DPoint p = new DPoint((int) x, (int) y);
+	list.add(p);
+}
+
+Delaunator del = new Delaunator(list);
+for (DTriangle t : del.getTriangles()) {
+	DEdge edgeA = t.ab; // edge A of Tri
+	DEdge edgeB = t.bc; // edge B of Tri
+	DEdge edgeC = t.ca; // edge C of Tri
+	DTriangle[] wingA = edgeA.getWing(); // wing A0, A1 of edge A
+	DTriangle[] wingB = edgeB.getWing(); // wing B0, B1 of edge B
+	DTriangle[] wingC = edgeC.getWing(); // wing C0, C1 of edge C
 }
 ```
 ## Ports to other languages
@@ -49,4 +42,3 @@ public static void main(String[] args) throws IOException
 - [Delaunator-Python](https://github.com/HakanSeven12/Delaunator-Python) (Python)
 - [hx-delaunator](https://github.com/dmitryhryppa/hx-delaunator) (Haxe)
 - [ricardomatias/delaunator](https://github.com/ricardomatias/delaunator) (Kotlin)
-- [delaunator-java](https://github.com/waveware4ai/delaunator-java) (Java)
